@@ -1,7 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function WidgetPreview({ settings, widgetSettings }) {
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    if (widgetSettings.openOnLoad) {
+      setIsOpen(true)
+    } else {
+      setIsOpen(false)
+    }
+  }, [widgetSettings.openOnLoad])
   
   const {
     ctaText,

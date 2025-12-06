@@ -29,7 +29,8 @@ export default function WidgetGenerator() {
     welcomeMessage: 'Hello',
     btnColorScheme: 'light',
     brandImage: 'https://uploads-ssl.webflow.com/5f68a65cd5188c058e27c898/6204c4267b92625c9770f687_whatsapp-chat-widget-dummy-logo.png',
-    darkHeaderColorScheme: { title: '#333333', subTitle: '#4F4F4F' }
+    darkHeaderColorScheme: { title: '#333333', subTitle: '#4F4F4F' },
+    openOnLoad: false
   })
 
   const [generatedScript, setGeneratedScript] = useState('')
@@ -342,6 +343,30 @@ export default function WidgetGenerator() {
               onChange={handleWidgetChange}
               placeholder="https://example.com/logo.png"
             />
+          </div>
+
+          <div className="form-group">
+            <label>Open chat widget on load?</label>
+            <div style={{ display: 'flex', gap: '2rem', marginTop: '0.5rem' }}>
+              <label>
+                <input
+                  type="radio"
+                  name="openOnLoad"
+                  value="true"
+                  checked={widgetSettings.openOnLoad === true}
+                  onChange={() => setWidgetSettings(prev => ({ ...prev, openOnLoad: true }))}
+                /> Yes
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="openOnLoad"
+                  value="false"
+                  checked={widgetSettings.openOnLoad === false}
+                  onChange={() => setWidgetSettings(prev => ({ ...prev, openOnLoad: false }))}
+                /> No
+              </label>
+            </div>
           </div>
 
           <button className="generate-btn" onClick={generateScript}>
