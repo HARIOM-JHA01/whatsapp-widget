@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import WidgetPreview from './WidgetPreview'
 import './WidgetGenerator.css'
 
 export default function WidgetGenerator() {
@@ -14,6 +15,21 @@ export default function WidgetGenerator() {
     welcomeMessage: 'Hello',
     zIndex: 999999,
     btnColorScheme: 'light'
+  })
+
+  const [widgetSettings, setWidgetSettings] = useState({
+    title: 'BrandName',
+    subTitle: 'Typically replies in a day',
+    headerBackgroundColor: '#FBFFC8',
+    headerColorScheme: 'dark',
+    greetingText: 'Hi there! \nHow can I help you?',
+    ctaText: 'Start Chat',
+    btnColor: '#1A1A1A',
+    cornerRadius: 40,
+    welcomeMessage: 'Hello',
+    btnColorScheme: 'light',
+    brandImage: 'https://uploads-ssl.webflow.com/5f68a65cd5188c058e27c898/6204c4267b92625c9770f687_whatsapp-chat-widget-dummy-logo.png',
+    darkHeaderColorScheme: { title: '#333333', subTitle: '#4F4F4F' }
   })
 
   const [generatedScript, setGeneratedScript] = useState('')
@@ -35,6 +51,22 @@ export default function WidgetGenerator() {
     }))
   }
 
+  const handleWidgetChange = (e) => {
+    const { name, value } = e.target
+    setWidgetSettings(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleWidgetNumberChange = (e) => {
+    const { name, value } = e.target
+    setWidgetSettings(prev => ({
+      ...prev,
+      [name]: parseInt(value) || 0
+    }))
+  }
+
   const validatePhone = (phone) => {
     const cleaned = phone.replace(/\D/g, '')
     return cleaned.length >= 10 && cleaned.length <= 15
@@ -50,8 +82,9 @@ export default function WidgetGenerator() {
     const script = `<script async src="${domain}/embeds/embed.min.js"></script>
 <script>
   var wa_btnSetting = ${JSON.stringify(settings, null, 2)};
+  var wa_widgetSetting = ${JSON.stringify(widgetSettings, null, 2)};
   window.onload = () => {
-    _waEmbed(wa_btnSetting);
+    _waEmbed(wa_btnSetting, wa_widgetSetting);
   };
 </script>`
 
@@ -235,9 +268,90 @@ export default function WidgetGenerator() {
             />
           </div>
 
+          <h2 style={{ marginTop: '2rem' }}>Chat Widget Settings</h2>
+
+          <div className="form-group">
+            <label htmlFor="title">Widget Title</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={widgetSettings.title}
+              onChange={handleWidgetChange}
+              placeholder="BrandName"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="subTitle">Widget Subtitle</label>
+            <input
+              type="text"
+              id="subTitle"
+              name="subTitle"
+              value={widgetSettings.subTitle}
+              onChange={handleWidgetChange}
+              placeholder="Typically replies in a day"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="greetingText">Greeting Text</label>
+            <textarea
+              id="greetingText"
+              name="greetingText"
+              value={widgetSettings.greetingText}
+              onChange={handleWidgetChange}
+              placeholder="Hi there!\nHow can I help you?"
+              rows="3"
+            />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="headerBackgroundColor">Header Background</label>
+              <input
+                type="color"
+                id="headerBackgroundColor"
+                name="headerBackgroundColor"
+                value={widgetSettings.headerBackgroundColor}
+                onChange={handleWidgetChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="headerColorScheme">Header Scheme</label>
+              <select
+                id="headerColorScheme"
+                name="headerColorScheme"
+                value={widgetSettings.headerColorScheme}
+                onChange={handleWidgetChange}
+              >
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="brandImage">Brand Image URL</label>
+            <input
+              type="url"
+              id="brandImage"
+              name="brandImage"
+              value={widgetSettings.brandImage}
+              onChange={handleWidgetChange}
+              placeholder="https://example.com/logo.png"
+            />
+          </div>
+
           <button className="generate-btn" onClick={generateScript}>
             Generate Script
           </button>
+        </div>
+
+        <div className="preview-section">
+          <h2>Live Preview</h2>
+          <WidgetPreview settings={settings} widgetSettings={widgetSettings} />
         </div>
 
         {generatedScript && (
